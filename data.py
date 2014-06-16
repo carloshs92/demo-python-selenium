@@ -39,7 +39,7 @@ C_VALUE_DOCUMENT_CARD = '5421875421'
 C_VALUE_PHONE_1 = '7854859'
 C_VALUE_PHONE_2 = '87596598'
 C_VALUE_ADDRESS = 'Jose Galvez'
-C_VALUE_CHECK_TERMS = ''
+C_VALUE_CHECK_TERMS = True
 
 def makeDict(location, description, value):
     return {'location': location, 'description': description, 'value': value, 'cod': CODIGO[location]}
@@ -63,7 +63,7 @@ def makeRegister(cod, error=True, type_error=None, ubigeo=None, address=None, do
                 'department':'',
                 'province':'',
                 'district':'',
-                'check_terms': True}
+                'check_terms': C_VALUE_CHECK_TERMS}
     if address is not None:
         register['type_address'] = address['type']
         register['address'] = address['value']
@@ -101,6 +101,9 @@ ERRORR_REGISTER['c_email_unique'] = makeDict(C_FIELD_EMAIL, u'El email está sie
 ERRORR_REGISTER['c_password_min'] = makeDict(C_FIELD_PASSWORD, C_MESSAGE_MIN % 6, 'rwrw')
 ERRORR_REGISTER['c_password_max'] = makeDict(C_FIELD_PASSWORD, C_MESSAGE_MAX % 20, 'rw'*20)
 ERRORR_REGISTER['c_password_required'] = makeDict(C_FIELD_PASSWORD, C_MESSAGE_REQUIRED, '')
+ERRORR_REGISTER['c_password_weak_1'] = makeDict(C_FIELD_PASSWORD, u'La contraseña ingresada es insegura.', '123456')
+ERRORR_REGISTER['c_password_weak_2'] = makeDict(C_FIELD_PASSWORD, u'La contraseña ingresada es insegura.', 'abc123')
+ERRORR_REGISTER['c_password_weak_3'] = makeDict(C_FIELD_PASSWORD, u'La contraseña ingresada es insegura.', 'qwerty')
 
 ERRORR_REGISTER['c_confirm_validate'] = makeDict(C_FIELD_CONFIRM, u'No coincide con el campo contraseña', 'rwrwrwrw')
 ERRORR_REGISTER['c_confirm_required'] = makeDict(C_FIELD_CONFIRM, C_MESSAGE_REQUIRED, '')
@@ -114,16 +117,16 @@ ERRORR_REGISTER['c_document_ruc_min'] = makeDict(C_FIELD_DOCUMENT, u'El RUC debe
 ERRORR_REGISTER['c_document_ruc_validate'] = makeDict(C_FIELD_DOCUMENT, u'Ingrese un RUC válido', 'ASWQWERTYHU')
 ERRORR_REGISTER['c_document_passport_max'] = makeDict(C_FIELD_DOCUMENT, u'Ingrese un máximo de 12 caracteres', '321456987456587')
 #ERRORR_REGISTER['c_document_passport_min'] = makeDict(C_FIELD_DOCUMENT, 'Ingrese un pasaporte válido', '254')
-ERRORR_REGISTER['c_document_passport_validate'] = makeDict(C_FIELD_DOCUMENT, u'Ingrese un pasaporte válido', 'QWETERS')
+ERRORR_REGISTER['c_document_passport_validate'] = makeDict(C_FIELD_DOCUMENT, u'Ingrese un pasaporte válido', '%&$"#$"')
 ERRORR_REGISTER['c_document_card_max'] = makeDict(C_FIELD_DOCUMENT, u'Ingrese un máximo de 12 caracteres', '55789545354426')
 #ERRORR_REGISTER['c_document_card_min'] = makeDict(C_FIELD_DOCUMENT, 'Ingrese un carnet de extranjería válido')
-ERRORR_REGISTER['c_document_card_validate'] = makeDict(C_FIELD_DOCUMENT, u'Ingrese un carnet de extranjería válido', 'TERTSD')
+ERRORR_REGISTER['c_document_card_validate'] = makeDict(C_FIELD_DOCUMENT, u'Ingrese un carnet de extranjería válido', '#"$"#$')
 ERRORR_REGISTER['c_document_required'] = makeDict(C_FIELD_DOCUMENT, C_MESSAGE_REQUIRED, '')
 
 ERRORR_REGISTER['c_phone_1_min'] = makeDict(C_FIELD_PHONE_1, C_MESSAGE_MIN % 7, '54632')
 ERRORR_REGISTER['c_phone_1_max'] = makeDict(C_FIELD_PHONE_1, C_MESSAGE_MAX % 10, '2312987541545')
 ERRORR_REGISTER['c_phone_1_only_numbers'] = makeDict(C_FIELD_PHONE_1, C_MESSAGE_ONLY_NUMBERS, 'ASDQWEQWE')
-ERRORR_REGISTER['c_phone_required'] = makeDict(C_FIELD_PHONE_1, C_MESSAGE_REQUIRED, '')
+ERRORR_REGISTER['c_phone_1_required'] = makeDict(C_FIELD_PHONE_1, C_MESSAGE_REQUIRED, '')
 
 ERRORR_REGISTER['c_phone_2_min'] = makeDict(C_FIELD_PHONE_2, u'Ingrese un mínimo de 3 caracteres', '12')
 ERRORR_REGISTER['c_phone_2_max'] = makeDict(C_FIELD_PHONE_2, u'Ingrese un máximo de 10 caracteres', '25445687584152')
@@ -132,7 +135,7 @@ ERRORR_REGISTER['c_phone_2_validate'] = makeDict(C_FIELD_PHONE_2, u'Sólo númer
 ERRORR_REGISTER['c_address_validate'] = makeDict(C_FIELD_ADDRESS, u"Solo letras, espacios, guiones (-) y apóstrofes (')", '&%$#$#$')
 ERRORR_REGISTER['c_address_max'] = makeDict(C_FIELD_ADDRESS, C_MESSAGE_MAX % 150, 'JAJAJAJOJO'*20)
 
-ERRORR_REGISTER['c_terms_required'] = makeDict(C_FIELD_CHECK_TERMS, C_MESSAGE_REQUIRED, '')
+ERRORR_REGISTER['c_terms_required'] = makeDict(C_FIELD_CHECK_TERMS, C_MESSAGE_REQUIRED, False)
 
 ##-------------------------------------------------------------------------------------------------------------------
 REGISTER = list()
@@ -161,3 +164,19 @@ REGISTER.append(makeRegister('registro_17', type_error=ERRORR_REGISTER['c_confir
 REGISTER.append(makeRegister('registro_18', type_error=ERRORR_REGISTER['c_confirm_validate']))
 
 REGISTER.append(makeRegister('registro_19', type_error=ERRORR_REGISTER['c_document_dni_validate']))
+REGISTER.append(makeRegister('registro_20', type_error=ERRORR_REGISTER['c_document_dni_min']))
+REGISTER.append(makeRegister('registro_21', type_error=ERRORR_REGISTER['c_document_ruc_validate'], document={'type':'RUC', 'value':'-'}))
+REGISTER.append(makeRegister('registro_22', type_error=ERRORR_REGISTER['c_document_ruc_min'], document={'type':'RUC', 'value':'-'}))
+REGISTER.append(makeRegister('registro_23', type_error=ERRORR_REGISTER['c_document_passport_validate'], document={'type':'Pasaporte', 'value':'-'}))
+REGISTER.append(makeRegister('registro_24', type_error=ERRORR_REGISTER['c_document_card_validate'], document={'type':'Carné de Extranjería', 'value':'-'}))
+REGISTER.append(makeRegister('registro_25', type_error=ERRORR_REGISTER['c_document_required']))
+REGISTER.append(makeRegister('registro_26', type_error=ERRORR_REGISTER['c_phone_1_min']))
+REGISTER.append(makeRegister('registro_27', type_error=ERRORR_REGISTER['c_phone_1_only_numbers']))
+REGISTER.append(makeRegister('registro_28', type_error=ERRORR_REGISTER['c_phone_1_required']))
+REGISTER.append(makeRegister('registro_29', type_error=ERRORR_REGISTER['c_phone_2_min']))
+REGISTER.append(makeRegister('registro_30', type_error=ERRORR_REGISTER['c_phone_2_validate']))
+REGISTER.append(makeRegister('registro_31', type_error=ERRORR_REGISTER['c_address_validate']))
+REGISTER.append(makeRegister('registro_32', type_error=ERRORR_REGISTER['c_terms_required']))
+REGISTER.append(makeRegister('registro_33', type_error=ERRORR_REGISTER['c_password_weak_1']))
+REGISTER.append(makeRegister('registro_34', type_error=ERRORR_REGISTER['c_password_weak_2']))
+REGISTER.append(makeRegister('registro_35', type_error=ERRORR_REGISTER['c_password_weak_3']))
