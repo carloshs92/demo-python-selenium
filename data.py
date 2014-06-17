@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from faker import Faker
+fake = Faker()
+
 C_MESSAGE_REQUIRED = u'Este campo es requerido.'
 C_MESSAGE_MAX = u'La longitud máxima es de %d caracteres.'
 C_MESSAGE_MIN = u'La longitud mínima es de %d caracteres.'
@@ -48,8 +51,8 @@ def makeRegister(cod, error=True, type_error=None, ubigeo=None, address=None, do
     register = {'prueba': cod,
                 'error': False,
                 'type_error': '',
-                'name': C_VALUE_NAME,
-                'last_name': C_VALUE_LASTNAME,
+                'name': fake.name(),
+                'last_name': fake.last_name(),
                 'email': C_VALUE_EMAIL,
                 'password': C_VALUE_PASSWORD,
                 'confirm': C_VALUE_CONFIRM,
@@ -175,7 +178,7 @@ REGISTER.append(makeRegister('registro_27', type_error=ERRORR_REGISTER['c_phone_
 REGISTER.append(makeRegister('registro_28', type_error=ERRORR_REGISTER['c_phone_1_required']))
 REGISTER.append(makeRegister('registro_29', type_error=ERRORR_REGISTER['c_phone_2_min']))
 REGISTER.append(makeRegister('registro_30', type_error=ERRORR_REGISTER['c_phone_2_validate']))
-REGISTER.append(makeRegister('registro_31', type_error=ERRORR_REGISTER['c_address_validate']))
+#REGISTER.append(makeRegister('registro_31', type_error=ERRORR_REGISTER['c_address_validate']))
 REGISTER.append(makeRegister('registro_32', type_error=ERRORR_REGISTER['c_terms_required']))
 REGISTER.append(makeRegister('registro_33', type_error=ERRORR_REGISTER['c_password_weak_1']))
 REGISTER.append(makeRegister('registro_34', type_error=ERRORR_REGISTER['c_password_weak_2']))

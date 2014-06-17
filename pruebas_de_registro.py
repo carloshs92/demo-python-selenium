@@ -40,7 +40,6 @@ class PruebasDeRegistro(unittest.TestCase):
             driver.find_element_by_id("txtName").clear()
             driver.find_element_by_id("txtName").send_keys(data['name'])
             self.printText( 'nombre ingresado')
-
             driver.find_element_by_id("txtLastName").clear()
             driver.find_element_by_id("txtLastName").send_keys(data['last_name'])
             self.printText('apellido ingresado')
@@ -70,16 +69,16 @@ class PruebasDeRegistro(unittest.TestCase):
             driver.find_element_by_id("txtPhone2").send_keys(data['phone_2'])
             self.printText( 'telefono 2 ingresado')
 
-            Select(driver.find_element_by_id("selAddress")).select_by_visible_text(data['type_address'])
-            driver.find_element_by_id("txtAddress").clear()
-            driver.find_element_by_id("txtAddress").send_keys(data['address'])
-            self.printText( 'direccion ingresado')
+            #Select(driver.find_element_by_id("selAddress")).select_by_visible_text(data['type_address'])
+            #driver.find_element_by_id("txtAddress").clear()
+            #driver.find_element_by_id("txtAddress").send_keys(data['address'])
+            #self.printText( 'direccion ingresado')
 
 
-            if data['select_ubigeo']:
-                Select(driver.find_element_by_id("selProvince")).select_by_visible_text("Oyon")
-                Select(driver.find_element_by_id("selDistrict")).select_by_visible_text("Caujul")
-                self.printText( 'ubigeo ingresado')
+            #if data['select_ubigeo']:
+            #    Select(driver.find_element_by_id("selProvince")).select_by_visible_text("Oyon")
+            #    Select(driver.find_element_by_id("selDistrict")).select_by_visible_text("Caujul")
+            #    self.printText( 'ubigeo ingresado')
 
             if data['check_terms']:
                 driver.find_element_by_id("chkTerms").click()

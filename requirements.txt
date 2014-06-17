@@ -1,0 +1,5 @@
+argparse==1.2.1
+distribute==0.6.24
+fake-factory==0.4.0
+selenium==2.42.1
+wsgiref==0.1.2
