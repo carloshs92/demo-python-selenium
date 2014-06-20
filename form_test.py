@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-class CreateRegister():
-
+class CreateForm():
     def __init__(self, fields):
         self.fields = dict()
         self.fields['is_error'] = False
@@ -9,10 +8,9 @@ class CreateRegister():
             self.fields[key] = fields[key]
         self.errors = list()
 
-    def addError(self, item, type, message, value):
-        assert item in self.fields.keys(), "The item '%s' was not found in key's field" % item
+    def addError(self, item, message, value):
+        assert item in self.fields.keys(), "The item '%s' was not found in key's dict" % item
         error = dict()
-        error['type'] = type
         error['location'] = item
         error['message'] = message
         error['value'] = value
@@ -20,14 +18,15 @@ class CreateRegister():
 
     def getList(self):
         registers = list()
-        registers.append(self.fields)
+        c = 1
         for error in self.errors:
-            register = self.fields
+            register = dict()
+            for item in self.fields.keys():
+                register[item] = self.fields[item]
+            register['cod'] = 'test_%d' % c
+            register[error['location']] = error['value']
             register['is_error'] = True
-            register['description'] = error
+            register['error'] = error
             registers.append(register)
+            c += 1
         return registers
-
-
-
-

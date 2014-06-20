@@ -1,20 +1,15 @@
 # -*- coding: utf-8 -*-
-from time import sleep
-from data import REGISTER
+from form_input_data import register
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+from form_keys import *
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException, NoAlertPresentException
-import unittest, time, re
+import unittest
 
 class PruebasDeRegistro(unittest.TestCase):
     def setUp(self):
-        self.binary = FirefoxBinary('/usr/bin/firefox/firefox')
-        self.driver = webdriver.Firefox(firefox_binary=self.binary)
-        self.driver.implicitly_wait(30)
-        self.base_url = "http://local.ofertop.pe/"
+        self.driver = webdriver.Firefox()
+        self.base_url = "http://paginadeprueba.pe/registro"
         self.verificationErrors = []
         self.accept_next_alert = False
         self.debug = False
@@ -22,94 +17,54 @@ class PruebasDeRegistro(unittest.TestCase):
     def printText(self, text):
         if self.debug:
             print text
-    def waitFor(self, seconds):
-        i = 0
-        while seconds > i:
-            i += 1
-            print u'--> Esperando %d segundo(s)...' % i
-            sleep(1)
+
     def test_pruebas_de_registro(self):
         driver = self.driver
         driver.get(self.base_url + "/")
         driver.find_element_by_css_selector("a.fancybox-item.fancybox-close").click()
-        driver.find_element_by_css_selector(u"li.register_link > a[title=\"Regístrate\"]").click()
-        driver.find_element_by_css_selector("a.fancybox-item.fancybox-close").click()
 
-        for data in REGISTER:
-            print u'--> Probando la prueba: %s ' % data['prueba']
-            driver.find_element_by_id("txtName").clear()
-            driver.find_element_by_id("txtName").send_keys(data['name'])
+        for data in register.getList():
+            print u'--> Probando la prueba: %s ' % data['cod']
+            driver.find_element_by_id(FIELD_NAME).clear()
+            driver.find_element_by_id(FIELD_NAME).send_keys(data[FIELD_NAME])
             self.printText( 'nombre ingresado')
-            driver.find_element_by_id("txtLastName").clear()
-            driver.find_element_by_id("txtLastName").send_keys(data['last_name'])
+
+            driver.find_element_by_id(FIELD_LASTNAME).clear()
+            driver.find_element_by_id(FIELD_LASTNAME).send_keys(data[FIELD_LASTNAME])
             self.printText('apellido ingresado')
 
             driver.find_element_by_css_selector("div.form_control.relative > #txtEmail").clear()
-            driver.find_element_by_css_selector("div.form_control.relative > #txtEmail").send_keys(data['email'])
+            driver.find_element_by_css_selector("div.form_control.relative > #txtEmail").send_keys(data[FIELD_EMAIL])
             self.printText( 'correo ingresado' )
 
-            driver.find_element_by_id("txtPassword1").clear()
-            driver.find_element_by_id("txtPassword1").send_keys(data['password'])
+            driver.find_element_by_id(FIELD_PASSWORD).clear()
+            driver.find_element_by_id(FIELD_PASSWORD).send_keys(data[FIELD_PASSWORD])
             self.printText( 'contraseña ingresado')
 
-            driver.find_element_by_id("txtRepeatPassword").clear()
-            driver.find_element_by_id("txtRepeatPassword").send_keys(data['confirm'])
+            driver.find_element_by_id(FIELD_CONFIRM).clear()
+            driver.find_element_by_id(FIELD_CONFIRM).send_keys(data[FIELD_CONFIRM])
             self.printText( 'contraseña repetida ingresado')
 
-            Select(driver.find_element_by_id("selDocument")).select_by_visible_text(data['type_document'])
-            driver.find_element_by_id("txtDocument").clear()
-            driver.find_element_by_id("txtDocument").send_keys(data['document'])
+            Select(driver.find_element_by_id(SELECT_DOCUMENT)).select_by_visible_text(data[FIELD_DOCUMENT].keys()[0])
+            driver.find_element_by_id(FIELD_DOCUMENT).clear()
+            driver.find_element_by_id(FIELD_DOCUMENT).send_keys(data[FIELD_DOCUMENT][data[FIELD_DOCUMENT].keys()[0]])
             self.printText( 'documento ingresado')
 
-            driver.find_element_by_id("txtPhone1").clear()
-            driver.find_element_by_id("txtPhone1").send_keys(data['phone_1'])
-            self.printText( 'telefono 1 ingresado')
-
-            driver.find_element_by_id("txtPhone2").clear()
-            driver.find_element_by_id("txtPhone2").send_keys(data['phone_2'])
-            self.printText( 'telefono 2 ingresado')
-
-            #Select(driver.find_element_by_id("selAddress")).select_by_visible_text(data['type_address'])
-            #driver.find_element_by_id("txtAddress").clear()
-            #driver.find_element_by_id("txtAddress").send_keys(data['address'])
-            #self.printText( 'direccion ingresado')
-
-
-            #if data['select_ubigeo']:
-            #    Select(driver.find_element_by_id("selProvince")).select_by_visible_text("Oyon")
-            #    Select(driver.find_element_by_id("selDistrict")).select_by_visible_text("Caujul")
-            #    self.printText( 'ubigeo ingresado')
-
-            if data['check_terms']:
-                driver.find_element_by_id("chkTerms").click()
+            if data[FIELD_CHECK_TERMS]:
+                driver.find_element_by_id(FIELD_CHECK_TERMS).click()
                 self.printText( 'checks ingresado')
 
-            #driver.find_element_by_id("sbmRegister").click()
-
-            if data['error']:
-                if data['type_error']['location']== 'txtEmail':
-                    self.waitFor(6)
+            if data['is_error']:
+                if data['error']['location']== FIELD_EMAIL:
                     error_id = driver.find_element_by_css_selector("div.form_control.relative > #txtEmail").get_attribute('data-parsley-id')
                 else:
-                    driver.find_element_by_id("sbmRegister").click()
-                    error_id = driver.find_element_by_id(data['type_error']['location']).get_attribute('data-parsley-id')
+                    driver.find_element_by_id(SUBMIT_REGISTER).click()
+                    error_id = driver.find_element_by_id(data['error']['location']).get_attribute('data-parsley-id')
 
-                if data['check_terms'] == False:
-                    message = driver.find_element_by_css_selector('#parsley-id-multiple-terminos > li').text
-                else:
-                    message = driver.find_element_by_css_selector('#parsley-id-%s > li' % error_id).text
-                assert data['type_error']['description'] == message, u'Mensaje erroneo en la prueba: %s , %s == %s' % (data['prueba'], data['type_error']['description'], message)
-                print u'--> Exito en %s el campo %s dio como mensaje %s' % (data['prueba'], data['type_error']['location'], data['type_error']['description'])
+                message = driver.find_element_by_css_selector('#parsley-id-%s > li' % error_id).text
+                assert data['error']['message'] == message, u'Mensaje erroneo en la prueba: %s , %s == %s' % (data['cod'], data['error']['message'], message)
+                print u'--> Exito en %s el campo %s dio como mensaje %s al ingresar %s' % (data['cod'], data['error']['location'], data['error']['message'], data['error']['value'])
 
-
-
-            if data['check_terms']:
-                driver.find_element_by_id("chkTerms").click()
-                self.printText( 'checks ingresado')
-
-            #driver.find_element_by_css_selector(u"li.register_link > a[title=\"Regístrate\"]").click()
-            #driver.find_element_by_css_selector("a.fancybox-item.fancybox-close").click()
-    
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)
         except NoSuchElementException, e: return False
