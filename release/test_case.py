@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from time import sleep
-from form_input_data import register
+from data import register
+from keys import *
 from selenium import webdriver
-from form_keys import *
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException, NoAlertPresentException
@@ -11,8 +11,8 @@ import unittest
 class PruebasDeRegistro(unittest.TestCase):
     def setUp(self):
         self.binary = FirefoxBinary('/usr/bin/firefox/firefox')
-        #self.driver = webdriver.Chrome('/usr/bin/chromedriver')
-        self.driver = webdriver.Firefox(firefox_binary=self.binary)
+        self.driver = webdriver.Chrome('/usr/bin/chromedriver')
+        #self.driver = webdriver.Firefox(firefox_binary=self.binary)
         self.driver.implicitly_wait(30)
         self.base_url = "http://local.ofertop.pe/registro"
         self.verificationErrors = []
